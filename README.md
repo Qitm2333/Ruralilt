@@ -8,7 +8,7 @@
 - **Home**: 首页，展示课程和学习进度
 - **Collection**: 收藏页，卡牌收集和AR识别
 - **Create**: 创作页，相机功能
-- **Message**: 消息页，礼物和通知（含考拉爬树动画）
+- **Message**: 消息页，礼物和通知（含考拉爬上卡牌的动画）
 - **Profile**: 个人页，成就、商店、报告（含考拉挥手动画）
 
 ### 🎯 特色功能
@@ -21,6 +21,7 @@
    - Profile页面：考拉挥手动画（90帧，30fps，1.6倍缩放）
    - Message页面：考拉爬树动画（104帧，30fps）
    - 进入页面自动播放
+（原本想用lottie，但制作过程遇到了很多很多问题）
 
 3. **视频播放器**
    - 自定义UI设计
@@ -137,9 +138,8 @@ setInterval(() => {
 
 ## 📄 许可证
 
-本项目基于 Figma 设计稿开发。
-
-原始设计：https://www.figma.com/design/Fwh6JUeyLGjzor4TMZVjJV/%E6%89%8B%E6%9C%BAApp%E5%AF%BC%E8%88%AA%E6%A0%8F%E8%AE%BE%E8%AE%A1
+本项目基于 我自己的Figma 设计稿开发~~
+插画，动效，高保真,技术demo都是我自己
 
 ---
 
