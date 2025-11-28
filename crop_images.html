@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>裁剪卡片图片</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      padding: 20px; 
+      max-width: 800px; 
+      margin: 0 auto;
+    }
+    canvas { 
+      border: 1px solid #ccc; 
+      margin: 10px 0;
+      display: block;
+    }
+    .card { 
+      margin: 20px 0; 
+      padding: 10px; 
+      border: 1px solid #ddd; 
+      border-radius: 5px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover { background: #45a049; }
+    .info { 
+      color: #666; 
+      margin: 5px 0; 
+    }
+  </style>
+</head>
+<body>
+  <h1>裁剪卡片图片 - 提取黄框区域</h1>
+  <p>点击下面的按钮处理每张图片，然后右键保存裁剪后的图片</p>
+  
+  <div id="cards"></div>
+
+  <script>
+    const frameWidth = 280;
+    const frameHeight = 380;
+
+    async function processCard(cardNumber) {
+      const container = document.getElementById(`card${cardNumber}`);
+      const canvas = document.getElementById(`canvas${cardNumber}`);
+      const ctx = canvas.getContext('2d');
+      const info = document.getElementById(`info${cardNumber}`);
+      
+      // 加载图片
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = function() {
+        info.innerHTML = `原始尺寸: ${img.width}x${img.height}`;
+        
+        // 计算黄框位置（居中）
+        const centerX = Math.floor(img.width / 2);
+        const centerY = Math.floor(img.height / 2);
+        
+        const left = centerX - Math.floor(frameWidth / 2);
+        const top = centerY - Math.floor(frameHeight / 2);
+        
+        info.innerHTML += `<br>裁剪区域: (${left}, ${top}, ${frameWidth}, ${frameHeight})`;
+        
+        // 设置canvas尺寸
+        canvas.width = frameWidth;
+        canvas.height = frameHeight;
+        
+        // 裁剪并绘制
+        ctx.drawImage(
+          img,
+          left, top, frameWidth, frameHeight,  // 源区域
+          0, 0, frameWidth, frameHeight         // 目标区域
+        );
+        
+        info.innerHTML += `<br><span style="color: green;">✅ 裁剪完成！右键保存图片为 ${cardNumber}.png</span>`;
+        
+        // 自动下载
+        canvas.toBlob(function(blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${cardNumber}.png`;
+          a.click();
+          URL.revokeObjectURL(url);
+          info.innerHTML += `<br><span style="color: blue;">📥 已自动下载</span>`;
+        });
+      };
+      
+      img.onerror = function() {
+        info.innerHTML = '<span style="color: red;">❌ 加载失败</span>';
+      };
+      
+      img.src = `verifyNew/${cardNumber}-1.png`;
+    }
+
+    // 创建5张卡片的处理区域
+    for (let i = 1; i <= 5; i++) {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'card';
+      cardDiv.id = `card${i}`;
+      cardDiv.innerHTML = `
+        <h3>Card ${i}</h3>
+        <button onclick="processCard(${i})">处理 Card ${i}</button>
+        <div class="info" id="info${i}">点击按钮开始处理</div>
+        <canvas id="canvas${i}"></canvas>
+      `;
+      document.getElementById('cards').appendChild(cardDiv);
+    }
+  </script>
+</body>
+</html>
